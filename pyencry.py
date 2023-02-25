@@ -17,7 +17,7 @@ window.title("PyEncry")
 window.resizable(width=False, height=False)
 
 wFrame=Frame(window,bg="#FAFAEB")
-wFrame.pack(side="top",fill="both",expand=True)
+wFrame.pack(side='top',fill='both',expand=True)
 
 statusLabel=Label(window,text="Welcome",bd=1,relief=SUNKEN,anchor=W)
 statusBar=statusLabel
@@ -100,7 +100,10 @@ def encrypButton():
             for fileName in openFiles:
                 fileIndex=openFiles.index(fileName)
                 encFile=pathlib.PurePath(fileName)
-                encName="{}\\DATA{}.bin".format(selectedPath,fileIndex)
+                fileSerialName="DATA{}.bin".format(fileIndex)
+                encName = os.path.join(selectedPath,fileSerialName)
+
+
                 fileName=encName
                 os.rename(encFile,encName)
                 onlyName=pathlib.PurePath(encFile).name
@@ -168,7 +171,7 @@ def decrypButton():
             for xmlFile in xmlFileNames:
                 xmfileIndex=xmlFileNames.index(xmlFile)+1
                 realFile=str(selectedPath.joinpath(selectedFiles[xmfileIndex][0]))
-                endPath=pathlib.Path("{}\\{}".format(selectedPath,xmlFile.getAttribute("name")))
+                endPath=pathlib.Path(os.path.join(selectedPath,xmlFile.getAttribute("name")))
                 with open(realFile, 'r+b') as f:
                     intData=int(xmlFile.getAttribute("value"))
                     byteDatas=intData.to_bytes(16,byteorder=sys.byteorder)
@@ -229,19 +232,19 @@ def DecrypXML():
 
 def doesButtonEvent():
     selectedVar=doesVar.get()
-    match selectedVar:
-        case 1:
-            openFileButton()
-        case 2:
-            encrypButton()
-        case 3:
-            decrypButton()
-        case _:
-            print("Non Select")
+    if (selectedVar==1):
+        openFileButton()
+    elif(selectedVar==2):
+        encrypButton()
+    elif(selectedVar==3):
+        decrypButton()
+    else:
+        print("Non Select")
 
 
-textBox=Entry(wFrame,width=52)
-textBox.grid(row=0,column=0,padx=1,pady=1)
+textBox=Entry(wFrame)
+textBox.place(x=2,y=2,width=300)
+#textBox.grid(row=0,column=0,padx=1,pady=1)
 
 doesButton=ttk.Menubutton(wFrame,text="Options ")
 doesMenu=Menu(doesButton,tearoff=0)
@@ -254,14 +257,17 @@ DecrypBtn=StringVar()
 
 
 doesButton["menu"]=doesMenu
-doesButton.grid(row=0,column=1,padx=1,pady=1)
+doesButton.place(x=303,y=1,width=95)
+
+#doesButton.grid(row=0,column=1,padx=1,pady=1)
 
 
 treeColumns=('file_path','file_size')
 treeView=ttk.Treeview(wFrame,columns=treeColumns,show='headings')
 treeView.heading('file_path', text="Name")
 treeView.heading('file_size',text="Data")
-treeView.grid(columnspan=2,row=1,padx=1,pady=1)
+treeView.place(x=2,y=30,width=396)
+#treeView.grid(columnspan=2,row=1,padx=1,pady=1)
 
 
 window.mainloop()
